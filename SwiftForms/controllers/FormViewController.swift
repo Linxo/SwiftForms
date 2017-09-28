@@ -45,7 +45,15 @@ open class FormViewController : UITableViewController {
     
     // MARK: Properties
     
-    open var form = FormDescriptor()
+    // REPLACED - Bastien Penalba - 04/10/2016
+    //    open var form = FormDescriptor()
+    // WITH
+    open var form = FormDescriptor() {
+        didSet {
+            tableView?.reloadData()
+        }
+    }
+    //END REPLACED
     
     // MARK: Init
     
@@ -90,7 +98,11 @@ open class FormViewController : UITableViewController {
         return nil
     }
     
-    @objc open func setValue(_ value: AnyObject, forTag tag: String) {
+    // REPLACED - Bastien PENALBA - 25/09/2016
+    //   @objc open func setValue(_ value: AnyObject, forTag tag: String) {
+    // WITH
+    @objc open func setValue(_ value: AnyObject?, forTag tag: String) {
+    // END REPLACED
         for (sectionIndex, section) in form.sections.enumerated() {
             for (rowIndex, row) in section.rows.enumerated() {
                 if row.tag == tag {
@@ -160,12 +172,20 @@ open class FormViewController : UITableViewController {
         return form.sections[section].footerTitle
     }
     
-    open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    // REPLACED - Romain VINCENS - 17/02/2017 - MAIF-884
+    //    open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    // WITH
+    open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        // END REPLACED
         guard let headerView = form.sections[section].headerView else { return nil }
         return headerView
     }
     
-    open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    // REPLACED - Romain VINCENS - 17/02/2017 - MAIF-884
+    //    open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    // WITH
+    open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        // END REPLACED
         guard let footerView = form.sections[section].footerView else { return nil }
         return footerView
     }

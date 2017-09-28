@@ -8,7 +8,11 @@
 
 import UIKit
 
+// REPLACED - Morgan LE GAL - 28/09/2017
+// class FormLabelCell: FormValueCell {
+// WITH
 open class FormLabelCell: FormValueCell {
+// END REPLACED
     
     /// MARK: FormBaseCell
     

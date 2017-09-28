@@ -12,8 +12,13 @@ open class FormDateCell: FormValueCell {
     
     // MARK: Properties
     
-    fileprivate let datePicker = UIDatePicker()
-    fileprivate let hiddenTextField = UITextField(frame: CGRect.zero)
+    // REPLACED - Romain VINCENS - IOSLINXO-2449
+    //fileprivate let datePicker = UIDatePicker()
+    //fileprivate let hiddenTextField = UITextField(frame: CGRect.zero)
+    // WITH
+    let datePicker = UIDatePicker()
+    let hiddenTextField = UITextField(frame: CGRect.zero)
+    // END REPLACED
     
     fileprivate let defaultDateFormatter = DateFormatter()
     
