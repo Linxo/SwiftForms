@@ -194,7 +194,11 @@ open class FormTextFieldCell: FormBaseCell {
     
     // MARK: Actions
     
-    @objc internal func editingChanged(_ sender: UITextField) {
+    // REPLACED - Morgan LE GAL - 28/09/2017
+    //@objc internal func editingChanged(_ sender: UITextField) {
+    // WITH
+    @objc open func editingChanged(_ sender: UITextField) {
+    // END REPLACED
         guard let text = sender.text, text.characters.count > 0 else { rowDescriptor?.value = nil; update(); return }
         rowDescriptor?.value = text as AnyObject
     }

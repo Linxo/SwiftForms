@@ -12,12 +12,12 @@ open class FormDateCell: FormValueCell {
     
     // MARK: Properties
     
-    // REPLACED - Romain VINCENS - IOSLINXO-2449
+    // REPLACED - Morgan LE GAL 28/09/2017 - IOSLINXO-2449
     //fileprivate let datePicker = UIDatePicker()
     //fileprivate let hiddenTextField = UITextField(frame: CGRect.zero)
     // WITH
-    let datePicker = UIDatePicker()
-    let hiddenTextField = UITextField(frame: CGRect.zero)
+    open let datePicker = UIDatePicker()
+    open let hiddenTextField = UITextField(frame: CGRect.zero)
     // END REPLACED
     
     fileprivate let defaultDateFormatter = DateFormatter()
