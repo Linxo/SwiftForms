@@ -79,7 +79,7 @@ open class FormViewController : UITableViewController {
     
     // MARK: Public interface
     
-    open func valueForTag(_ tag: String) -> AnyObject? {
+    @objc open func valueForTag(_ tag: String) -> AnyObject? {
         for section in form.sections {
             for row in section.rows {
                 if row.tag == tag {
@@ -90,7 +90,7 @@ open class FormViewController : UITableViewController {
         return nil
     }
     
-    open func setValue(_ value: AnyObject, forTag tag: String) {
+    @objc open func setValue(_ value: AnyObject, forTag tag: String) {
         for (sectionIndex, section) in form.sections.enumerated() {
             for (rowIndex, row) in section.rows.enumerated() {
                 if row.tag == tag {
@@ -113,6 +113,20 @@ open class FormViewController : UITableViewController {
     open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return form.sections[section].rows.count
     }
+    
+    // ADDED - Romain VINCENS - 23/02/2017 - MAIF-884
+    @objc open func updateCell(for tag: String) {
+        for (sectionIndex, section) in form.sections.enumerated() {
+            for (rowIndex, row) in section.rows.enumerated() {
+                if row.tag == tag {
+                    if let cell = self.tableView.cellForRow(at: IndexPath(row: rowIndex, section: sectionIndex)) as? FormBaseCell {
+                        cell.update()
+                    }
+                }
+            }
+        }
+    }
+    // END ADDED
     
     open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         

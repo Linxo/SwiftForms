@@ -12,8 +12,11 @@ open class FormTextFieldCell: FormBaseCell {
     
     // MARK: Cell views
     
-    open let titleLabel = UILabel()
-    open let textField  = UITextField()
+    @objc open let titleLabel = UILabel()
+    @objc open let textField  = UITextField()
+    // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+    open let subtitleLabel = UILabel()
+    // END ADDED
     
     // MARK: Properties
     
@@ -28,20 +31,47 @@ open class FormTextFieldCell: FormBaseCell {
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         textField.translatesAutoresizingMaskIntoConstraints = false
+        // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        // END ADDED
+
         
         titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
         textField.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
+        // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+        subtitleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.callout)
+        // END ADDED
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(textField)
+        // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+        contentView.addSubview(subtitleLabel)
+        // END ADDED
         
-        titleLabel.setContentHuggingPriority(500, for: .horizontal)
-        titleLabel.setContentCompressionResistancePriority(1000, for: .horizontal)
+        // REPLACED - Romain VINCENS - 20/02/2017 - MAIF-884 + MAIF-980
+//        titleLabel.setContentHuggingPriority(UILayoutPriority(rawValue: 500), for: .horizontal)
+//        titleLabel.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 1000), for: .horizontal)
+        // WITH
+        titleLabel.setContentHuggingPriority(UILayoutPriority.defaultHigh+1, for: .horizontal)
+        // END REPLACED
         
-        contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: contentView, attribute: .height, multiplier: 1.0, constant: 0.0))
-        contentView.addConstraint(NSLayoutConstraint(item: textField, attribute: .height, relatedBy: .equal, toItem: contentView, attribute: .height, multiplier: 1.0, constant: 0.0))
-        contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0))
-        contentView.addConstraint(NSLayoutConstraint(item: textField, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0))
+        // REPLACED - Romain VINCENS - 20/02/2017 - MAIF-884
+        //        contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: contentView, attribute: .height, multiplier: 1.0, constant: 0.0))
+        //        contentView.addConstraint(NSLayoutConstraint(item: textField, attribute: .height, relatedBy: .equal, toItem: contentView, attribute: .height, multiplier: 1.0, constant: 0.0))
+        //        contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0))
+        //        contentView.addConstraint(NSLayoutConstraint(item: textField, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0))
+        // WITH
+        let labelContainerGuide = UILayoutGuide()
+        addLayoutGuide(labelContainerGuide)
+        
+        titleLabel.topAnchor.constraint(equalTo: labelContainerGuide.topAnchor).isActive = true
+        subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
+        subtitleLabel.bottomAnchor.constraint(equalTo: labelContainerGuide.bottomAnchor).isActive = true
+        labelContainerGuide.topAnchor.constraint(greaterThanOrEqualTo: contentView.layoutMarginsGuide.topAnchor).isActive = true
+        labelContainerGuide.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        textField.firstBaselineAnchor.constraint(equalTo: titleLabel.firstBaselineAnchor).isActive = true
+        // END REPLACED
         
         textField.addTarget(self, action: #selector(FormTextFieldCell.editingChanged(_:)), for: .editingChanged)
     }
@@ -54,6 +84,9 @@ open class FormTextFieldCell: FormBaseCell {
         }
         
         titleLabel.text = rowDescriptor?.title
+        // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+        subtitleLabel.text = rowDescriptor?.subtitle
+        // END ADDED
         textField.text = rowDescriptor?.value as? String
         textField.placeholder = rowDescriptor?.configuration.cell.placeholder
         
@@ -108,7 +141,11 @@ open class FormTextFieldCell: FormBaseCell {
     }
     
     open override func constraintsViews() -> [String : UIView] {
-        var views = ["titleLabel" : titleLabel, "textField" : textField]
+        // REPLACED - Romain VINCENS - 20/02/2017 - MAIF-884
+        //        var views = ["titleLabel" : titleLabel, "textField" : textField]
+        // WITH
+        var views = ["titleLabel" : titleLabel, "textField" : textField, "subtitleLabel": subtitleLabel]
+        // END REPLACED
         if self.imageView!.image != nil {
             views["imageView"] = imageView
         }
@@ -116,19 +153,35 @@ open class FormTextFieldCell: FormBaseCell {
     }
     
     open override func defaultVisualConstraints() -> [String] {
+        // REPLACED - Bastien PENALBA - 19/09/16
+        //        if self.imageView!.image != nil {
+        //            if titleLabel.text != nil && (titleLabel.text!).characters.count > 0 {
+        //                return ["H:[imageView]-[titleLabel]-[textField]-16-|"]
+        //            } else {
+        //                return ["H:[imageView]-[textField]-16-|"]
+        //            }
+        //        } else {
+        //            if titleLabel.text != nil && (titleLabel.text!).characters.count > 0 {
+        //                return ["H:|-16-[titleLabel]-[textField]-16-|"]
+        //            } else {
+        //                return ["H:|-16-[textField]-16-|"]
+        //            }
+        //        }
+        // WITH
         if self.imageView!.image != nil {
             if titleLabel.text != nil && (titleLabel.text!).characters.count > 0 {
-                return ["H:[imageView]-[titleLabel]-[textField]-16-|"]
+                return ["H:[imageView]-[titleLabel]-[textField]-|", "H:[imageView]-[subtitleLabel]-|"]
             } else {
-                return ["H:[imageView]-[textField]-16-|"]
+                return ["H:[imageView]-[textField]-|", "H:[imageView]-[subtitleLabel]-|"]
             }
         } else {
             if titleLabel.text != nil && (titleLabel.text!).characters.count > 0 {
-                return ["H:|-16-[titleLabel]-[textField]-16-|"]
+                return ["H:|-[titleLabel]-[textField]-|", "H:|-[subtitleLabel]-|"]
             } else {
-                return ["H:|-16-[textField]-16-|"]
+                return ["H:|-[textField]-|", "H:|-[subtitleLabel]-|"]
             }
         }
+        // END REPLACED
     }
     
     open override func firstResponderElement() -> UIResponder? {
@@ -141,7 +194,7 @@ open class FormTextFieldCell: FormBaseCell {
     
     // MARK: Actions
     
-    internal func editingChanged(_ sender: UITextField) {
+    @objc internal func editingChanged(_ sender: UITextField) {
         guard let text = sender.text, text.characters.count > 0 else { rowDescriptor?.value = nil; update(); return }
         rowDescriptor?.value = text as AnyObject
     }

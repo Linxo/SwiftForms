@@ -18,7 +18,7 @@ open class FormBaseCell: UITableViewCell {
         }
     }
     
-    open weak var formViewController: FormViewController?
+    @objc open weak var formViewController: FormViewController?
     
     fileprivate var customConstraints: [NSLayoutConstraint] = []
     
@@ -34,30 +34,30 @@ open class FormBaseCell: UITableViewCell {
     
     // MARK: Public interface
     
-    open func configure() {
+    @objc open func configure() {
         /// override
     }
     
-    open func update() {
+    @objc open func update() {
         /// override
     }
     
-    open func defaultVisualConstraints() -> [String] {
+    @objc open func defaultVisualConstraints() -> [String] {
         /// override
         return []
     }
     
-    open func constraintsViews() -> [String : UIView] {
+    @objc open func constraintsViews() -> [String : UIView] {
         /// override
         return [:]
     }
     
-    open func firstResponderElement() -> UIResponder? {
+    @objc open func firstResponderElement() -> UIResponder? {
         /// override
         return nil
     }
     
-    open func inputAccesoryView() -> UIToolbar {
+    @objc open func inputAccesoryView() -> UIToolbar {
         
         let actionBar = UIToolbar()
         actionBar.isTranslucent = true
@@ -71,19 +71,19 @@ open class FormBaseCell: UITableViewCell {
         return actionBar
     }
     
-    internal func handleDoneAction(_: UIBarButtonItem) {
+    @objc internal func handleDoneAction(_: UIBarButtonItem) {
         firstResponderElement()?.resignFirstResponder()
     }
     
-    open class func formRowCellHeight() -> CGFloat {
+    @objc open class func formRowCellHeight() -> CGFloat {
         return 44.0
     }
     
-    open class func formRowCanBecomeFirstResponder() -> Bool {
+    @objc open class func formRowCanBecomeFirstResponder() -> Bool {
         return false
     }
     
-    open class func formViewController(_ formViewController: FormViewController, didSelectRow: FormBaseCell) {
+    @objc open class func formViewController(_ formViewController: FormViewController, didSelectRow: FormBaseCell) {
     }
     
     // MARK: Constraints

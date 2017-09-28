@@ -33,6 +33,9 @@ public final class FormRowDescriptor {
         case segmentedControl
         case picker
         case date
+        // ADDED - Morgan Le Gal - 31/10/2016 - MAIF-553
+        case birthday
+        // END ADDED
         case time
         case dateAndTime
         case stepper
@@ -49,6 +52,11 @@ public final class FormRowDescriptor {
         public var required:                 Bool
         public var willUpdateClosure:        ((FormRowDescriptor) -> Void)?
         public var didUpdateClosure:         ((FormRowDescriptor) -> Void)?
+        // ADDED - Bastien Penalba - 23/09/16
+        /// This closure is called when the user did finish editing the value instead of being called at every change
+        public var didBeginEditingClosure:     ((FormRowDescriptor) -> Void)?
+        public var didEndEditingClosure:     ((FormRowDescriptor) -> Void)?
+        // END ADDED
         public var visualConstraintsClosure: ((FormBaseCell) -> [String])?
         
         public init() {
@@ -59,6 +67,10 @@ public final class FormRowDescriptor {
             required = true
             willUpdateClosure = nil
             didUpdateClosure = nil
+            // ADDED - Bastien Penalba - 23/09/16
+            didBeginEditingClosure = nil
+            didEndEditingClosure = nil
+            // END ADDED
             visualConstraintsClosure = nil
         }
     }
@@ -103,12 +115,23 @@ public final class FormRowDescriptor {
         public var dateFormatter: DateFormatter?
     }
     
+    // ADDED - Morgan Le Gal - 03/11/2016 - MAIF-553
+    public struct BirthdayConfiguration {
+        public var dateFormatter: DateFormatter?
+        public var maxAllowedAge: Int?
+        public var minAllowedAge: Int?
+    }
+    // END ADDED
+    
     public struct RowConfiguration {
         public var cell:      CellConfiguration
         public var selection: SelectionConfiguration
         public var button:    ButtonConfiguration
         public var stepper:   StepperConfiguration
         public var date:      DateConfiguration
+        // ADDED - Morgan Le Gal - 31/10/2016 - MAIF-553
+        public var birthday:  BirthdayConfiguration
+        // END ADDED
         public var userInfo:  [String : AnyObject]
         
         init() {
@@ -117,6 +140,9 @@ public final class FormRowDescriptor {
             button = ButtonConfiguration()
             stepper = StepperConfiguration()
             date = DateConfiguration()
+            // ADDED - Morgan Le Gal - 31/10/2016 - MAIF-553
+            birthday = BirthdayConfiguration()
+            // END ADDED
             userInfo = [:]
         }
     }
@@ -127,6 +153,9 @@ public final class FormRowDescriptor {
     public let type: RowType
     
     public var title: String?
+    // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+    public var subtitle: String?
+    // END ADDED
     
     public var value: AnyObject? {
         willSet {
@@ -156,4 +185,14 @@ public final class FormRowDescriptor {
         self.title = title
         self.configuration = RowConfiguration()
     }
+    
+    // ADDED - Romain VINCENS - 20/02/2017 - MAIF-884
+    public init(tag: String, type: RowType, title: String, subtitle: String) {
+        self.tag = tag
+        self.type = type
+        self.title = title
+        self.subtitle = subtitle
+        self.configuration = RowConfiguration()
+    }
+    // END ADDED
 }

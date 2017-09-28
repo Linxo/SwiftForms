@@ -12,7 +12,7 @@ open class FormTitleCell: FormBaseCell {
     
     // MARK: Cell views
     
-    open let titleLabel = UILabel()
+    @objc open let titleLabel = UILabel()
     
     // MARK: FormBaseCell
     
